@@ -1,0 +1,194 @@
+---
+title: "Lab1"
+author: "Sahil Jain"
+date: "September 9, 2017"
+output:
+  word_document: default
+  pdf_document: default
+  html_document: default
+---
+
+Reading the csv file into the R console. 
+```{r}
+BikeShare <- read.csv("/Users/sahiljain/Downloads/bike_share.csv")
+```
+
+Initializing all the variable equal to y = count (response variable), x1,x2,x3,x4,x5 = explanatory variables  
+```{r}
+y <- BikeShare$count
+x1 <- BikeShare$temp
+x2 <- BikeShare$humidity
+x3 <- BikeShare$windspeed
+x4 <- BikeShare$season
+x5 <- BikeShare$weather
+```
+
+
+Q1 Construct scatter plots of count versus temp, humidity and windspeed, being sure to appropriately label your axes. In each case describe the linear relationship you observe in terms of ‘direction’ and ‘strength’. Use the correlation coefficient
+in each case to formalize this interpretation.
+
+There will be 3 different scatter plots and interpretations are made with respect to the plot. 
+
+(i) Count vs temp 
+
+```{r}
+plot(x1, y, ylab = "Count", xlab = "Temprature", main = "Count vs Temprature", pch = 10)
+cor(x1,y)
+```
+Interpretation : So from the scatter plot and correlation (.3944) of count vs temp we can see that they have a very strong linear relation as value of rho (correlation) is close to 1. From the scatter plot we can see that the count of bike renting goes up as the temprature rises above 40 degrees fahrenheit.
+
+(ii) Count vs humidity 
+
+```{r}
+plot(x2,y, ylab = "Count", xlab = "Humidity", main = "Count vs Humidity")
+cor(x2,y)
+```
+Interpretation : In this case we see that as humidity increseas bike share count decreases. Correlation coefficient between two variables is -0.317 which is closer to -1 hence a stronger linear relationship. Count starts to decrease as humidity starts to go above 40%. 
+
+(iii) Count vs Windspeed 
+
+```{r}
+plot(x3,y, ylab = "Count", xlab = "Windspeed", main = "Count vs Windspeed")
+cor(x3,y)
+```
+Interpretation : Bike share count increases as windspeed decreases, but count remains somewhat constant upto windspeed ~22 mph, and then starts to decrease as windspeed increases above 22 mph. Correlation coeffiecient for count vs windspeed in .1013 which is a weak linear relation as it is much closer to zero. 
+
+Q2 For each relationship in part (a) calculate the equation of the line-of-best-fit, treating count as the response variable and temp, humidity and windspeed as explanatory variables. Note that you must use the equations derived in class to perform these calculations. You may, however, use automated
+functions (such as lm() in R and OLS() in Python) to check your answers.
+
+Calculating the parameters and the line of best fit in each of the previous 3 cases. 
+
+(i) Count vs temp 
+
+```{r}
+beta1a_hat <- cor(x1,y) * sd(y) / sd(x1)
+beta1a_hat
+beta0a_hat <- mean(y) - beta1a_hat * mean(x1)
+beta0a_hat
+```
+beta1_hat = 5.094745
+beta0_hat = -156.9856
+Line of best fit (Count vs Temp) : Yi = -156.9856 + 5.094745Xi
+
+(ii) Count vs Humidity 
+
+```{r}
+beta1b_hat <- cor(x2,y) * sd(y) / sd(x2)
+beta1b_hat
+beta0b_hat <- mean(y) - beta1b_hat * mean(x2)
+beta0b_hat
+```
+beta1_hat = -2.987269
+beta0_hat = 376.4456
+Line of best fit (Count vs humidity) : Yi = 376.4456 - 2.987Xi
+
+(iii) Count vs Windspeed
+
+```{r}
+beta1c_hat <- cor(x3,y) * sd(y) / sd(x3)
+beta1c_hat
+beta0c_hat <- mean(y) - beta1c_hat * mean(x3)
+beta0c_hat
+```
+beta1_hat = 2.249
+beta0_hat = 162.7876 
+Line of best fit (Count vs Windspeed) : Yi = 162.7876 + 2.24Xi
+
+Q3 Add the fitted regression lines from part (b) to the appropriate scatter plots constructed in part (a).
+
+Adding fitting line to the scatter plot 
+
+(i) Count vs Temprature 
+
+```{r}
+plot(x1, y, ylab = "Count", xlab = "Temprature", main = "Count vs Temprature", pch = 10)
+abline(beta0a_hat, beta1a_hat, col = "red", lwd = 2)
+```
+
+(ii) Count vs Humidity
+```{r}
+plot(x2,y, ylab = "Count", xlab = "Humidity", main = "Count vs Humidity", pch = 10)
+abline(beta0b_hat, beta1b_hat, col = "red", lwd = 2)
+```
+
+(iii) Count vs Windspeed
+```{r}
+plot(x3,y, ylab = "Count", xlab = "Windspeed", main = "Count vs Windspeed", pch = 10)
+abline(beta0c_hat, beta1c_hat, col = "red", lwd = 2)
+```
+
+Q4  Based on your findings thus far, rank the variables temp, humidity and windspeed in terms of the strength of their relationship with bike rentals, from most weakly associated to most strongly associated.
+
+Ranking : 
+(1) Count vs Windspeed
+(2) Count vs Humidity
+(3) Count vs Temprature
+
+Q5 Using your lines-of-best-fit calculated in (b), calculate the expected number of bike rentals in hours for which
+(i) the outside temperature is 80 degrees Fahrenheit
+(ii) the wind speed is 15 miles per hour
+(iii) the relative humidity is 100%
+
+(i) At temp = 80 
+```{r}
+x <- 80
+mu_hat <- beta0a_hat + beta1a_hat * x
+mu_hat 
+```
+(ii) At windspeed = 15 mph 
+```{r}
+x <- 15
+mu_hat <- beta0c_hat + beta1c_hat * x
+mu_hat
+```
+(iii) At humidity 100% 
+```{r}
+x <- 100
+mu_hat <- beta0b_hat + beta1b_hat * x
+mu_hat 
+```
+
+Q6 In each of the cases in part (e) the value of the explanatory variable lies within the range of values actually observed. What risk does one face when predicting outside the range of observed explanatory variable values
+
+The risk one person face while predicting outside the range of observed explanatory varibale values is that the model wont be as consistent as compared to predictic within the range. 
+
+Q7 Construct boxplots of count vs. season and count vs. weather, being sure to appropriately label your axes. Comment on the relationship between bike rentals and these two variables.
+
+(i) Box plot for Count vs Season 
+
+```{r}
+boxplot(y~x4, xlab = "Season ", ylab = "Count", main = "Count vs Season")
+```
+Interpretation : From the box plot we can interpret this thing that there were more bike rentals in season 1 but the median was less than that of season 2,3 and 4.
+
+(ii) Box plot for Count vs Weather 
+
+```{r}
+boxplot(y~x5, xlab = "Weather", ylab = "Count", main = "Count vs Weather")
+```
+Interpretation : Weather 3 had the most of number of rentals as compared to weather 1 and 2, however weather 1 and 3 have high median value as compared to weather 3. Whereas 4 has least number of bike rentals because it was stormy weather. 
+
+Q8  Using automated functions (such as lm() in R and OLS() in Python) fit a simple linear regression model between count, and each of season and weather. Interpret the regressioncoefficients in each case. Do these interpretations seem practically useful? 
+
+```{r}
+model2 <- lm(y~x4)
+summary(model2)
+```
+From the model it looks like depending upon the season bike rentals vary. For instance in season 1 or 2 the number would be greater as compared to season 3 or 4. 
+
+```{r}
+model2 <- lm(y~x5)
+summary(model2)
+```
+In the regression result of count vs weather, it seems like number of bike rentals depends upon the weather. Depending on what number 1,2,3 or 4 depicts the bike rentals vary. 
+
+In both of the above cases the interpretations are not practically useful. 
+
+Q9  Explain why the linear regressions in part (h) are inappropriate. Suggest an alternative approach that would be more appropriate 
+
+The linear model in part (h) is inappropriate because the these variables make the model inconsisten and hard to interpret the model in a proper way. 
+ 
+
+
+
+
